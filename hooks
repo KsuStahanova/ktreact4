@@ -1,0 +1,52 @@
+useFetching.js
+
+
+  import React, {useState} from "react";
+
+export const useFetching = (callback) => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
+    const fetching = async () => {
+        try {
+            setIsLoading(true)
+            await callback()
+        } catch (e) {
+            setError(e.message);
+        } finally {
+            setIsLoading(false)
+        }
+    }
+    return [fetching, isLoading, error]
+}
+
+
+
+
+
+
+usePosts.js
+
+
+import {useMemo} from "react";
+
+export const useSortedPosts = (posts, sort) => {
+    const sortedPosts = useMemo(() => {
+        if (sort) {
+            return [...posts].sort((a, b) => a[sort].localeCompare(b[sort]))
+        }
+        return posts;
+    }, [sort, posts])
+
+    return sortedPosts;
+}
+
+export const usePosts = (posts, sort, query) => {
+    const sortedPosts = useSortedPosts(posts, sort);
+
+    const sortedAndSearchedPosts = useMemo(() => {
+        return sortedPosts.filter(post => post.title.toLowerCase().includes(query.toLowerCase()))
+    }, [query, sortedPosts])
+
+    return sortedAndSearchedPosts;
+}
+
