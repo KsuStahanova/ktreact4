@@ -1,0 +1,49 @@
+MyModal.jsx
+import React from 'react';
+import cl from './MyModal.module.css'
+
+const MyModal = ({children, visible, setVisible}) => {
+
+    const rootClasses = [cl.myModal]
+
+    if (visible) {
+        rootClasses.push(cl.active);
+    }
+
+    return (
+        <div className={rootClasses.join(' ')} onClick={() => setVisible(false)}>
+            <div className={cl.myModalContent} onClick={(e) => e.stopPropagation()}>
+                {children}
+            </div>
+        </div>
+    );
+};
+
+export default MyModal;
+
+
+
+
+MyModal.module.css
+.myModal {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    display: none;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.myModalContent {
+    padding: 25px;
+    background: white;
+    border-radius: 16px;
+    min-width: 250px;
+}
+
+.myModal.active {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
