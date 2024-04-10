@@ -1,0 +1,23 @@
+MyButton.jsx
+import React from "react";
+import classes from './MyButton.module.css'
+
+const MyButton = ({children, ...props}) => {
+    return (
+        <button {...props} className={classes.MyBtn}>
+            {children}
+        </button>
+    );
+};
+
+export default MyButton;
+
+MyButton.module.css
+.MyBtn {
+    padding: 5px 15px;
+    color: teal;
+    font-size: 14px;
+    background: transparent;
+    border: 1px solid teal;
+    cursor: pointer;
+}
