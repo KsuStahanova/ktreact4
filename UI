@@ -1,0 +1,215 @@
+AppRouter.js
+import React from 'react';
+import {Navigate, Route, Routes} from "react-router-dom";
+import About from "../pages/About";
+import Posts from "../pages/Posts";
+import Error from "../pages/Error";
+
+const AppRouter = () => {
+    return (
+        <div>
+            <Routes>
+                <Route path="/about" element={<About/>}/>
+                <Route path="/posts" element={<Posts/>}/>
+                <Route path="/error" element={<Error/>}/>
+                <Route path="*" element={<Navigate replace={true} to="/error"/>}/>
+            </Routes>
+        </div>
+    );
+};
+
+export default AppRouter;
+
+
+
+
+
+
+
+ClassCounter.jsx
+import React from "react";
+
+class ClassCounter extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            count: 0
+        }
+        this.increment = this.increment.bind(this);
+        this.decrement = this.decrement.bind(this);
+    }
+
+    increment() {
+        this.setState( {count: this.state.count + 1})
+    }
+
+    decrement() {
+        this.setState( {count: this.state.count - 1})
+    }
+    render() {
+        return (
+            <div>
+                <h1>{this.state.count}</h1>
+                <button onClick={this.increment}>Increment</button>
+                <button onClick={this.decrement}>Decrement</button>
+            </div>
+        )
+    }
+}
+
+export default ClassCounter;
+
+
+
+
+Counter.jsx
+import React, {useState} from "react";
+
+const Counter = function () {
+    const [count, setCount] = useState(0)
+
+    function increment() {
+        setCount(count + 1);
+    }
+
+    function decrement() {
+        setCount(count - 1);
+    }
+
+    return (
+        <div>
+            <h1>{count}</h1>
+            <button onClick={increment}>Increment</button>
+            <button onClick={decrement}>Decrement</button>
+        </div>
+    )
+}
+
+export default Counter;
+
+
+
+
+
+PostForm.jsx
+import React, {useState} from 'react';
+import MyInput from "./UI/input/MyInput";
+import MyButton from "./UI/button/MyButton";
+
+const PostForm = ({create}) => {
+    const [post, setPost] = useState({title: '', body: ''})
+
+    const addNewPost = (e) => {
+        e.preventDefault()
+        const newPost = {
+            ...post, id:Date.now()
+        }
+        create(newPost)
+        setPost({title: '', body: ''})
+    }
+
+    return (
+        <form>
+            <MyInput
+                value={post.title}
+                onChange={e => setPost({...post, title: e.target.value})}
+                type="text"
+                placeholder="Заголовок поста"
+            />
+            <MyInput
+                value={post.body}
+                onChange={e => setPost({...post, body: e.target.value})}
+                type="text"
+                placeholder="Описание поста"
+            />
+            <MyButton onClick={addNewPost}>Создать пост</MyButton>
+        </form>
+    );
+};
+
+export default PostForm;
+
+
+
+
+
+PostItem.jsx
+import React from "react";
+import MyButton from "./UI/button/MyButton";
+
+const PostItem = (props) => {
+    return (
+            <div className="post">
+                <div className="post__counter">
+                    <strong>{props.post.id}. {props.post.title}</strong>
+                    <div>
+                        {props.post.body}
+                    </div>
+                    <div className="post__btns">
+                        <MyButton onClick={() => props.remove(props.post)}>
+                            Открыть
+                        </MyButton>
+                        <MyButton onClick={() => props.remove(props.post)}>Удалить</MyButton>
+                    </div>
+                </div>
+            </div>
+    );
+};
+
+export default PostItem;
+
+
+
+
+
+PostList.jsx
+import React from "react";
+import PostItem from "./PostItem";
+import {CSSTransition, TransitionGroup} from "react-transition-group";
+
+const PostList = ({posts, title, remove}) => {
+    if (!posts.length) {
+        return (
+                <h1 style={{textAlign: 'center'}}>
+                    Посты не были найдены!
+                </h1>
+    )
+    }
+    return (
+        <div>
+            <h1 style={{textAlign: 'center'}}>
+                {title}
+            </h1>
+            <TransitionGroup>
+                {posts.map((post, index) =>
+                    <CSSTransition
+                        key={post.id}
+                        timeout={500}
+                        classNames="post"
+                    >
+                        <PostItem remove={remove} number={index + 1} post={post} />
+                    </CSSTransition>
+                )}
+            </TransitionGroup>
+
+        </div>
+    );
+};
+
+export default PostList;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
